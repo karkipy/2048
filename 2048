@@ -1,0 +1,83 @@
+#!/bin/bash
+
+allCells=(0 0 0 0 0 0 0 0 0)
+cellSize=2
+standardSize=3
+standardChar='---'
+standardspace='  '
+
+
+leftPress() {
+  for i in {0..2}
+  do
+    index=$(($i*3))
+    echo $index
+  done
+}
+
+keycode() {
+  read -r -sn1 t
+  case $t in
+    A) echo up ;;
+    B) echo down ;;
+    C) echo right ;;
+    D) leftPress ;;
+  esac
+}
+
+
+drawColumns() {
+  start=$(($1*3))
+  firstValue=${allCells[$start]}
+  secondValue=${allCells[$start+1]}
+  thirdValue=${allCells[$start+2]}
+
+  if [ $firstValue == 0 ];
+  then
+    firstValue=' '
+  fi;
+
+  if [ $secondValue == 0 ];
+  then
+    secondValue=' '
+  fi;
+
+  if [ $thirdValue == 0 ];
+  then
+    thirdValue=' '
+  fi;
+
+
+  echo "|$standardspace$firstValue|$standardspace$secondValue|$standardspace$thirdValue|"
+}
+
+
+drawRows() {
+
+  for i in {0..2}
+  do
+    echo " ${standardChar}" "${standardChar}" "${standardChar}"
+    drawColumns $i
+    echo " ${standardChar}" "${standardChar}" "${standardChar}"
+
+  done
+}
+
+generateRandom() {
+  randomIndex=$(( ( RANDOM % 9 )  + 0 ))
+  if [ ${allCells[$randomIndex]} != 0 ]
+  then
+    generateRandom
+  else
+    allCells[${randomIndex}]=2
+  fi;
+}
+
+# echo ${allCells[3]}
+generateRandom
+drawRows
+
+while true;
+do
+ keycode
+done
