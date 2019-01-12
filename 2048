@@ -6,6 +6,7 @@ standardSize=3
 standardChar='-----'
 standardspace='     '
 score=0
+moves=0
 
 
 leftPress() {
@@ -44,7 +45,7 @@ leftPress() {
     fi;
   done
 
-  generateRandom
+  checkGameState
 }
 
 
@@ -83,7 +84,7 @@ rightPress() {
       fi;
     fi;
   done
-  generateRandom
+  checkGameState
 }
 
 upPress() {
@@ -125,7 +126,7 @@ upPress() {
       fi;
     fi;
   done
-  generateRandom
+  checkGameState
 }
 
 downPress() {
@@ -167,7 +168,7 @@ downPress() {
       fi;
     fi;
   done
-  generateRandom
+  checkGameState
 }
 
 keycode() {
@@ -233,14 +234,53 @@ drawRows() {
 }
 
 
+gameOver() {
+  read -d '' -sn 1
+  score=0
+  moves=0
+  for j in {0..8}
+  do
+    allCells[$j]=0
+  done
+  generateRandom
+}
+
+checkGameState() {
+  moves=$(($moves + 1))
+  count=0
+
+  for j in {0..8}
+  do
+    if [ ${allCells[$j]} != 0 ]
+    then
+    count=$(($count+1))
+    fi;
+
+    if [ "${allCells[$j]}" -gt "$score" ];
+    then
+      score=${allCells[$j]}
+    fi;
+
+  done
+
+  if [ $count == 9 ]
+  then
+    echo "Game Over Press any key to restart"
+    gameOver
+  else
+    generateRandom
+  fi;
+
+}
+
 
 generateRandom() {
   randomIndex=$(( ( RANDOM % 9 )  + 0 ))
-  if [ ${allCells[$randomIndex]} != 0 ]
-  then
-    generateRandom
-  else
-    allCells[${randomIndex}]=2
+    if [ ${allCells[$randomIndex]} != 0 ]
+    then
+      generateRandom
+    else
+      allCells[${randomIndex}]=2
   fi;
 }
 
@@ -248,6 +288,9 @@ generateRandom
 
 while true;
 do
+ clear
+ echo 'Game Score : '$score ' Total Moves: '$moves
+ echo ''
  drawRows
  keycode
 done
