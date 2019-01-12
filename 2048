@@ -3,24 +3,179 @@
 allCells=(0 0 0 0 0 0 0 0 0)
 cellSize=2
 standardSize=3
-standardChar='---'
-standardspace='  '
+standardChar='-----'
+standardspace='     '
+score=0
 
 
 leftPress() {
   for i in {0..2}
   do
     index=$(($i*3))
-    echo $index
+    leftIndex=$index
+    middleIndex=$(($index + 1))
+    rightIndex=$(($index + 2))
+    if [ ${allCells[$rightIndex]} != 0 ]
+    then
+      if [ ${allCells[$rightIndex]} == ${allCells[$middleIndex]} ]
+      then
+        allCells[$middleIndex]=$((${allCells[$rightIndex]} * 2))
+        allCells[$rightIndex]=0
+
+      elif [ ${allCells[$middleIndex]} == 0 ]
+      then
+        allCells[$middleIndex]=${allCells[$rightIndex]}
+        allCells[$rightIndex]=0
+      fi;
+    fi;
+
+
+    if [ ${allCells[$middleIndex]} != 0 ]
+    then
+      if [ ${allCells[$middleIndex]} == ${allCells[$leftIndex]} ]
+      then
+        allCells[$leftIndex]=$((${allCells[$middleIndex]} * 2))
+        allCells[$middleIndex]=0
+      elif [ ${allCells[$leftIndex]} == 0 ]
+      then
+        allCells[$leftIndex]=${allCells[$middleIndex]}
+        allCells[$middleIndex]=0
+      fi;
+    fi;
   done
+
+  generateRandom
+}
+
+
+rightPress() {
+  for i in {0..2}
+  do
+    index=$(($i*3))
+    leftIndex=$index
+    middleIndex=$(($index + 1))
+    rightIndex=$(($index + 2))
+    if [ ${allCells[$leftIndex]} != 0 ]
+    then
+      if [ ${allCells[$leftIndex]} == ${allCells[$middleIndex]} ]
+      then
+        allCells[$middleIndex]=$((${allCells[$leftIndex]} * 2))
+        allCells[$leftIndex]=0
+
+      elif [ ${allCells[$middleIndex]} == 0 ]
+      then
+        allCells[$middleIndex]=${allCells[$leftIndex]}
+        allCells[$leftIndex]=0
+      fi;
+    fi;
+
+
+    if [ ${allCells[$middleIndex]} != 0 ]
+    then
+      if [ ${allCells[$middleIndex]} == ${allCells[$rightIndex]} ]
+      then
+        allCells[$rightIndex]=$((${allCells[$middleIndex]} * 2))
+        allCells[$middleIndex]=0
+      elif [ ${allCells[$rightIndex]} == 0 ]
+      then
+        allCells[$rightIndex]=${allCells[$middleIndex]}
+        allCells[$middleIndex]=0
+      fi;
+    fi;
+  done
+  generateRandom
+}
+
+upPress() {
+
+    for i in {0..2}
+    do
+      index=$i
+      firstRow=$index
+      secondRow=$(($index + 3))
+      thirdRow=$(($index + 6))
+
+
+
+    if [ ${allCells[$thirdRow]} != 0 ]
+    then
+      if [ ${allCells[$thirdRow]} == ${allCells[$secondRow]} ]
+      then
+        allCells[$secondRow]=$((${allCells[$thirdRow]} * 2))
+        allCells[$thirdRow]=0
+
+      elif [ ${allCells[$secondRow]} == 0 ]
+      then
+        allCells[$secondRow]=${allCells[$thirdRow]}
+        allCells[$thirdRow]=0
+      fi;
+    fi;
+
+
+    if [ ${allCells[$secondRow]} != 0 ]
+    then
+      if [ ${allCells[$secondRow]} == ${allCells[$firstRow]} ]
+      then
+        allCells[$firstRow]=$((${allCells[$secondRow]} * 2))
+        allCells[$secondRow]=0
+      elif [ ${allCells[$firstRow]} == 0 ]
+      then
+        allCells[$firstRow]=${allCells[$secondRow]}
+        allCells[$secondRow]=0
+      fi;
+    fi;
+  done
+  generateRandom
+}
+
+downPress() {
+
+   for i in {0..2}
+    do
+      index=$i
+      firstRow=$index
+      secondRow=$(($index + 3))
+      thirdRow=$(($index + 6))
+
+
+
+    if [ ${allCells[$firstRow]} != 0 ]
+    then
+      if [ ${allCells[$firstRow]} == ${allCells[$secondRow]} ]
+      then
+        allCells[$secondRow]=$((${allCells[$firstRow]} * 2))
+        allCells[$firstRow]=0
+
+      elif [ ${allCells[$secondRow]} == 0 ]
+      then
+        allCells[$secondRow]=${allCells[$firstRow]}
+        allCells[$firstRow]=0
+      fi;
+    fi;
+
+
+    if [ ${allCells[$secondRow]} != 0 ]
+    then
+      if [ ${allCells[$secondRow]} == ${allCells[$thirdRow]} ]
+      then
+        allCells[$thirdRow]=$((${allCells[$secondRow]} * 2))
+        allCells[$secondRow]=0
+      elif [ ${allCells[$thirdRow]} == 0 ]
+      then
+        allCells[$thirdRow]=${allCells[$secondRow]}
+        allCells[$secondRow]=0
+      fi;
+    fi;
+  done
+  generateRandom
 }
 
 keycode() {
   read -r -sn1 t
   case $t in
-    A) echo up ;;
-    B) echo down ;;
-    C) echo right ;;
+    A) upPress ;;
+    B) downPress ;;
+    C) rightPress ;;
     D) leftPress ;;
   esac
 }
@@ -34,21 +189,35 @@ drawColumns() {
 
   if [ $firstValue == 0 ];
   then
-    firstValue=' '
+    firstValue=''
   fi;
 
   if [ $secondValue == 0 ];
   then
-    secondValue=' '
+    secondValue=''
   fi;
 
   if [ $thirdValue == 0 ];
   then
-    thirdValue=' '
+    thirdValue=''
   fi;
 
+  standardLength=${#standardspace}
+  firstDiff=${#firstValue}
+  firstDiff=$(($standardLength - $firstDiff))
+  firstDisplay=${standardspace:0:$firstDiff}$firstValue
 
-  echo "|$standardspace$firstValue|$standardspace$secondValue|$standardspace$thirdValue|"
+
+  secondDiff=${#secondValue}
+  secondDiff=$(($standardLength - $secondDiff))
+  secondDisplay=${standardspace:0:$secondDiff}$secondValue
+
+
+  thirdDiff=${#thirdValue}
+  thirdDiff=$(($standardLength - $thirdDiff))
+  thirdDisplay=${standardspace:0:$thirdDiff}$thirdValue
+
+  echo "|$firstDisplay|$secondDisplay|$thirdDisplay|"
 }
 
 
@@ -63,6 +232,8 @@ drawRows() {
   done
 }
 
+
+
 generateRandom() {
   randomIndex=$(( ( RANDOM % 9 )  + 0 ))
   if [ ${allCells[$randomIndex]} != 0 ]
@@ -73,11 +244,10 @@ generateRandom() {
   fi;
 }
 
-# echo ${allCells[3]}
 generateRandom
-drawRows
 
 while true;
 do
+ drawRows
  keycode
 done
