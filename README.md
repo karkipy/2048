@@ -51,17 +51,12 @@ Restart the terminal and hit the command
 
 ### Output
 
-<img width="383" alt="screen shot 2019-01-10 at 8 16 56 pm" src="https://user-images.githubusercontent.com/12614476/50975380-8ddbce80-1515-11e9-9253-517f584733fe.png">
+<img width="338" alt="screen shot 2019-01-12 at 10 28 45 pm" src="https://user-images.githubusercontent.com/12614476/51075905-0c717100-16ba-11e9-802e-11f44652e8a6.png">
 
 
 <br>
 <br>
-<img width="422" alt="screen shot 2019-01-10 at 8 17 03 pm" src="https://user-images.githubusercontent.com/12614476/50975381-8e746500-1515-11e9-9eaf-f3e344a4b7a1.png">
+<br>
+<img width="447" alt="screen shot 2019-01-12 at 10 32 37 pm" src="https://user-images.githubusercontent.com/12614476/51075906-0c717100-16ba-11e9-94b7-ad784b344c2e.png">
 
 
-
-
-### Left To Do
-
-1) Gameover situation
-2) Score update along with space bar updates
